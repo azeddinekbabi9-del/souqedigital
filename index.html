@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Souqe Digital</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__row">
+      <h1 class="brand">Souqe Digital</h1>
+
+      <nav class="nav">
+        <a href="index.html" class="nav__link active">Home</a>
+        <a href="#products" class="nav__link">Products</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- SLIDER -->
+  <section class="container">
+    <div class="slider" id="slider">
+      <div class="slides" id="slides"></div>
+
+      <button class="slider__btn left" id="prevBtn" aria-label="Previous">‹</button>
+      <button class="slider__btn right" id="nextBtn" aria-label="Next">›</button>
+
+      <div class="dots" id="dots"></div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <main class="container">
+    <div class="section-head">
+      <h2 class="title-glow">Digital Products</h2>
+      <p>Choose a product → open details → order with WhatsApp form.</p>
+    </div>
+
+    <div class="grid" id="productGrid"></div>
+  </main>
+
+  <footer class="container footer">
+    <p>© <span id="year"></span> Souqe Digital</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
