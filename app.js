@@ -2,7 +2,7 @@
 // CONFIG: بدّل رقم واتساب ديالك هنا
 // المغرب مثال: +2126xxxxxxx => "2126xxxxxxx" (بلا + ولا 00)
 // =======================
-const STORE_WHATSAPP_NUMBER = "212600000000"; // <-- بدّلها
+const STORE_WHATSAPP_NUMBER = "212782901677"; // <-- بدّلها
 
 const ORDERS_KEY = "vortex_orders_v1";
 
