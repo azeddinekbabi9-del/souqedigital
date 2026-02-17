@@ -1,141 +1,163 @@
 // =======================
-// CONFIG: بدّل رقم واتساب ديالك هنا
-// المغرب مثال: +2126xxxxxxx => "2126xxxxxxx" (بلا + ولا 00)
+// Put your WhatsApp number (international format, no +, no spaces)
+// Example Morocco: 2126XXXXXXX
 // =======================
-const STORE_WHATSAPP_NUMBER = "212782901677"; // <-- بدّلها
+const STORE_WHATSAPP = "212782901677";
 
-const ORDERS_KEY = "vortex_orders_v1";
-
-// =======================
-// DATA
-// =======================
+// Products (replace images with your 800x800)
 const products = [
-  {
-    id: "ebook-starter",
-    name: "NETFLIX",
-    price: 3.5,
-    tag: "account" ,
-    desc: "Watch unlimited movies, series, and Netflix originals anytime, anywhere",
-    details: "Includes HD streaming, multiple profiles, watch on TV, laptop, phone, and tablet. Cancel anytime.",
+  { id:"netflix", name:"NETFLIX-Quantity not available", price:3.5, tag:"Acont",
+    desc:"Includes HD streaming, multiple profiles, watch on TV, laptop, phone, and tablet. Cancel anytime.",
+    details:"للطلب أملي الفورم بالمعطيات ديالك، و غادي يجيك مساج جاهز فواتساب باش تأكد الطلب ديالك. ما عليك غير تضغط على  فواتساب و غادي نتواصل معاك في أقرب وقت. شكرا لك!.",
     img:"https://image2url.com/r2/default/images/1771338955670-2a9083bf-9459-42d6-953d-dc3026c84449.png"
   },
+    { id:"spotify", name:"SPOTIFY-Quantity not available", price:4, tag:"Acont",
+    desc:"Includes unlimited music streaming, millions of songs, create your own playlists, listen on phone, laptop, tablet, and TV. Cancel anytime.",
+    details:"للطلب أملي الفورم بالمعطيات ديالك، و غادي يجيك مساج جاهز فواتساب باش تأكد الطلب ديالك. ما عليك غير تضغط على  فواتساب و غادي نتواصل معاك في أقرب وقت. شكرا لك!.",
+    img:"https://image2url.com/r2/default/images/1771346850466-81d01413-aa23-4aa4-9506-37e770c077b1.png"
+  },
+     { id:"instagram-followers", name:"FOLLOWERS-INSTAGRAM", price:2, tag:"1000 Followers",
+    desc:"Real Instagram followers, fast delivery, secure growth.",
+    details:"للطلب أملي الفورم بالمعطيات ديالك، و غادي يجيك مساج جاهز فواتساب باش تأكد الطلب ديالك. ما عليك غير تضغط على  فواتساب و غادي نتواصل معاك في أقرب وقت. شكرا لك!.",
+    img:"https://image2url.com/r2/default/images/1771347594897-ea1b0dac-c5ca-4f0a-b8b5-8491b068d33b.png"
+  },
+    { id:"facebook-followers", name:"FOLLOWERS-FACEBOOK", price:2, tag:"1000 Followers",
+    desc:"Real Facebook followers, fast delivery, secure growth.",
+    details:"للطلب أملي الفورم بالمعطيات ديالك، و غادي يجيك مساج جاهز فواتساب باش تأكد الطلب ديالك. ما عليك غير تضغط على  فواتساب و غادي نتواصل معاك في أقرب وقت. شكرا لك!.",
+    img:"https://image2url.com/r2/default/images/1771347594897-ea1b0dac-c5ca-4f0a-b8b5-8491b068d33b.png"
+  },
 ];
 
+// Slider (1600x600 recommended)
 const slidesData = [
   {
-    title: "Sell Digital Products",
-    text: ".",
-    cta: { label: "Browse products", href: "#products" },
-    img: "https://image2url.com/r2/default/images/1771339966515-55691de9-bec2-4225-ad4e-7a12d8cc3998.png"
+    title: "Premium Digital Products",
+    text: "Choose a product and order directly via WhatsApp.",
+    ctaLabel: "Browse products",
+    ctaHref: "#products",
+    img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1600&q=80"
   },
 
 ];
 
-// =======================
 // Helpers
-// =======================
-const money = (n) => `$${n.toFixed(2)}`;
 const $ = (sel) => document.querySelector(sel);
-const getProductById = (id) => products.find(p => p.id === id);
+const money = (n) => `$${n.toFixed(2)}`;
 
-function safeLoad(key, fallback){
-  try { return JSON.parse(localStorage.getItem(key) || "") ?? fallback; }
-  catch { return fallback; }
-}
-function safeSave(key, value){
-  localStorage.setItem(key, JSON.stringify(value));
-}
-
-function normalizePhone(raw){
-  return String(raw || "").trim().replace(/\s+/g, "");
+let toastTimer = null;
+function showToast(msg){
+  const t = $("#toast");
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove("show"), 1400);
 }
 
-function buildWhatsAppMessage(order){
-  const p = order.product;
-  const lines = [
-    "🛒 New Order",
-    `• Product: ${p.name}`,
-    `• Price: ${money(p.price)}`,
-    "",
-    "👤 Customer info",
-    `• Name: ${order.fullName}`,
-    `• Gmail: ${order.email}`,
-    `• Phone: ${order.phone}`,
-    `• WhatsApp: ${order.whatsapp}`,
-  ];
-  if (order.note) {
-    lines.push("", "📝 Note", order.note);
-  }
-  lines.push("", `✅ Product ID: ${p.id}`);
-  return lines.join("\n");
-}
-
-function openWhatsAppToStore(message){
-  const text = encodeURIComponent(message);
-  const number = (STORE_WHATSAPP_NUMBER || "").replace(/\D/g, "");
-  const url = number
-    ? `https://wa.me/${number}?text=${text}`
-    : `https://wa.me/?text=${text}`;
-  window.open(url, "_blank", "noopener,noreferrer");
-}
-
-// Reveal animation
 function setupReveal(){
   const els = document.querySelectorAll(".reveal");
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) e.target.classList.add("show");
-    });
+  if (!els.length) return;
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("show"); });
   }, { threshold: 0.12 });
   els.forEach(el => io.observe(el));
 }
 
-// =======================
-// HOME
-// =======================
-function initHome(){
+function generateOrderId(){
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  const dd = String(d.getDate()).padStart(2,"0");
+  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+  return `VX-${yyyy}${mm}${dd}-${rand}`;
+}
+
+function buildWhatsAppMessage({ orderId, product, qty, fullName, email, phone, note }){
+  const total = product.price * qty;
+  return [
+    "🧾 *NEW ORDER*",
+    `Order ID: *${orderId}*`,
+    "----------------------",
+    `Product: *${product.name}*`,
+    `Tag: ${product.tag}`,
+    `Unit price: ${money(product.price)}`,
+    `Quantity: *${qty}*`,
+    `Total: *${money(total)}*`,
+    "----------------------",
+    `Full name: ${fullName}`,
+    `Gmail: ${email}`,
+    `Number: ${phone}`,
+    `Note: ${note ? note : "-"}`,
+    "----------------------",
+    `Date: ${new Date().toLocaleString()}`
+  ].join("\n");
+}
+
+function openWhatsApp(message){
+  const url = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+
+// Slider init (index only)
+function initSlider(){
   const slidesEl = $("#slides");
   const dotsEl = $("#dots");
-  const gridEl = $("#productGrid");
-  if (!slidesEl || !dotsEl || !gridEl) return;
+  const prevBtn = $("#prevBtn");
+  const nextBtn = $("#nextBtn");
+  const slider = $("#slider");
+  if (!slidesEl || !dotsEl || !prevBtn || !nextBtn || !slider) return;
 
-  // slider render
   slidesEl.innerHTML = slidesData.map(s => `
-    <div class="slide">
-      <div class="slide__text">
+    <div class="hero-slide">
+      <img src="${s.img}" alt="${s.title}">
+      <div class="hero-content">
         <h3>${s.title}</h3>
         <p>${s.text}</p>
-        <a class="btn primary" href="${s.cta.href}">${s.cta.label}</a>
-        <a class="btn ghost" href="product.html?id=ui-kit" style="margin-left:10px">Featured</a>
+        <a class="btn primary" href="${s.ctaHref}">${s.ctaLabel}</a>
       </div>
-      <img class="slide__img" src="${s.img}" alt="${s.title}" />
     </div>
   `).join("");
 
   dotsEl.innerHTML = slidesData.map((_, i) =>
-    `<button class="dot" data-dot="${i}" aria-label="Go to slide ${i+1}"></button>`
+    `<button class="hero-dot ${i===0 ? "active" : ""}" data-dot="${i}"></button>`
   ).join("");
 
   let index = 0;
-  const setActive = () => {
+  let timer = null;
+
+  const apply = () => {
     slidesEl.style.transform = `translateX(-${index * 100}%)`;
-    dotsEl.querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === index));
+    dotsEl.querySelectorAll(".hero-dot").forEach((d,i)=> d.classList.toggle("active", i===index));
   };
 
-  const next = () => { index = (index + 1) % slidesData.length; setActive(); };
-  const prev = () => { index = (index - 1 + slidesData.length) % slidesData.length; setActive(); };
+  const next = () => { index = (index + 1) % slidesData.length; apply(); };
+  const prev = () => { index = (index - 1 + slidesData.length) % slidesData.length; apply(); };
 
-  $("#nextBtn").addEventListener("click", next);
-  $("#prevBtn").addEventListener("click", prev);
-  dotsEl.addEventListener("click", (e) => {
-    const d = e.target.getAttribute("data-dot");
-    if (d !== null) { index = Number(d); setActive(); }
+  nextBtn.addEventListener("click", ()=>{ next(); restart(); });
+  prevBtn.addEventListener("click", ()=>{ prev(); restart(); });
+
+  dotsEl.querySelectorAll("[data-dot]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      index = parseInt(btn.getAttribute("data-dot"),10);
+      apply(); restart();
+    });
   });
 
-  setActive();
-  setInterval(next, 4500);
+  const start = () => { timer = setInterval(next, 4500); };
+  const stop = () => { if (timer) clearInterval(timer); timer=null; };
+  const restart = () => { stop(); start(); };
 
-  // products render
+  slider.addEventListener("mouseenter", stop);
+  slider.addEventListener("mouseleave", start);
+
+  apply(); start();
+}
+
+// Home products
+function initHome(){
+  const gridEl = $("#productGrid");
+  if (!gridEl) return;
+
   gridEl.innerHTML = products.map(p => `
     <article class="card reveal">
       <img class="card__img" src="${p.img}" alt="${p.name}" />
@@ -148,8 +170,7 @@ function initHome(){
         <div class="card__row">
           <div class="price">${money(p.price)}</div>
           <div class="card__actions">
-            <a class="btn ghost" href="product.html?id=${p.id}">View</a>
-            <a class="btn primary" href="product.html?id=${p.id}#order">Order</a>
+            <a class="btn primary" href="product.html?id=${p.id}">Order</a>
           </div>
         </div>
       </div>
@@ -162,25 +183,16 @@ function initHome(){
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 }
 
-// =======================
-// PRODUCT PAGE + MODAL
-// =======================
+// Product page form
 function initProductPage(){
   const holder = $("#productPage");
   if (!holder) return;
 
-  const params = new URLSearchParams(location.search);
-  const id = params.get("id");
-  const p = getProductById(id);
+  const id = new URLSearchParams(location.search).get("id");
+  const p = products.find(x => x.id === id);
 
-  if (!p) {
-    holder.innerHTML = `
-      <div class="product-info">
-        <h1>Product not found</h1>
-        <p class="muted">رجع للصفحة الرئيسية واختار واحد المنتج.</p>
-        <a class="btn primary" href="index.html">Back to store</a>
-      </div>
-    `;
+  if (!p){
+    holder.innerHTML = `<div class="product-info"><h2>Product not found</h2></div>`;
     return;
   }
 
@@ -193,104 +205,85 @@ function initProductPage(){
 
     <div class="product-info">
       <div class="kv">
-        <span>${p.tag}</span>
-        <span>Digital product</span>
-        <span>Order via WhatsApp</span>
+        <span>${p.tag}</span><span>Digital</span><span>2026</span>
       </div>
 
-      <h1 class="title-glow">${p.name}</h1>
+      <h2 style="margin:0">${p.name}</h2>
       <p class="muted">${p.details}</p>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div class="card__row">
         <div class="price" style="font-size:22px">${money(p.price)}</div>
-        <button class="btn primary" id="openOrderBtn">Order now</button>
+        <span class="muted">Unit price</span>
       </div>
 
-      <p class="hint">
-       للطلب أملي الفورم بالمعطيات ديالك، و غادي يجيك مساج جاهز فواتساب باش تأكد الطلب ديالك. ما عليك غير تضغط على "إرسال" فواتساب و غادي نتواصل معاك في أقرب وقت. شكرا لك!
-      </p>
+      <form class="form" id="orderForm">
+        <div>
+          <div class="label">Full name</div>
+          <input class="input" id="fullName" required placeholder="Your full name" />
+        </div>
 
-      <a class="btn ghost" href="index.html#products">← Continue shopping</a>
+        <div>
+          <div class="label">Gmail</div>
+          <input class="input" id="email" type="email" required placeholder="example@gmail.com" />
+        </div>
+
+        <div>
+          <div class="label">Number</div>
+          <input class="input" id="phone" required placeholder="06xxxxxxxx" />
+        </div>
+
+        <div>
+          <div class="label">Quantity</div>
+          <div class="qty-controls">
+            <button class="qty-btn" type="button" id="decQty">-</button>
+            <input class="input qty-input" id="qtyInput" type="number" min="1" value="1" />
+            <button class="qty-btn" type="button" id="incQty">+</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="label">Note</div>
+          <textarea class="textarea" id="note" placeholder="Any note... (optional)"></textarea>
+        </div>
+
+        <button class="btn primary" type="submit">Send order on WhatsApp</button>
+        <p class="hint">This will open WhatsApp with your order message.</p>
+      </form>
     </div>
   `;
 
-  const modal = $("#orderModal");
-  const overlay = $("#orderOverlay");
-  const closeBtn = $("#closeOrderBtn");
-  const form = $("#orderForm");
-  const previewBtn = $("#previewMsgBtn");
-  const previewBox = $("#msgPreview");
-  const openBtn = $("#openOrderBtn");
+  const qtyInput = $("#qtyInput");
+  $("#incQty").addEventListener("click", ()=> qtyInput.value = String((parseInt(qtyInput.value,10)||1)+1));
+  $("#decQty").addEventListener("click", ()=> qtyInput.value = String(Math.max(1,(parseInt(qtyInput.value,10)||1)-1)));
 
-  if (!modal || !overlay || !closeBtn || !form || !openBtn) return;
-
-  const openModal = () => modal.setAttribute("aria-hidden", "false");
-  const closeModal = () => modal.setAttribute("aria-hidden", "true");
-
-  openBtn.addEventListener("click", openModal);
-  closeBtn.addEventListener("click", closeModal);
-  overlay.addEventListener("click", closeModal);
-
-  if (location.hash === "#order") openModal();
-
-  function collectOrderFromForm(){
-    const fd = new FormData(form);
-    return {
-      id: crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()),
-      createdAt: new Date().toISOString(),
-      product: p,
-      fullName: String(fd.get("fullName") || "").trim(),
-      email: String(fd.get("email") || "").trim(),
-      phone: normalizePhone(fd.get("phone")),
-      whatsapp: normalizePhone(fd.get("whatsapp")),
-      note: String(fd.get("note") || "").trim(),
-    };
-  }
-
-  function validateOrder(order){
-    if (!order.fullName) return "Name is required.";
-    if (!order.email || !order.email.includes("@")) return "Valid Gmail is required.";
-    if (!order.phone) return "Phone is required.";
-    if (!order.whatsapp) return "WhatsApp is required.";
-    return null;
-  }
-
-  function saveOrder(order){
-    const orders = safeLoad(ORDERS_KEY, []);
-    orders.unshift(order);
-    safeSave(ORDERS_KEY, orders);
-  }
-
-  previewBtn?.addEventListener("click", () => {
-    const order = collectOrderFromForm();
-    const err = validateOrder(order);
-    previewBox.style.display = "block";
-    previewBox.textContent = err ? "⚠️ " + err : buildWhatsAppMessage(order);
-  });
-
-  form.addEventListener("submit", (e) => {
+  $("#orderForm").addEventListener("submit", (e)=>{
     e.preventDefault();
-    const order = collectOrderFromForm();
-    const err = validateOrder(order);
 
-    if (err) {
-      previewBox.style.display = "block";
-      previewBox.textContent = "⚠️ " + err;
+    if (!STORE_WHATSAPP || STORE_WHATSAPP.includes("X")){
+      showToast("Set your WhatsApp number in app.js first.");
       return;
     }
 
-    saveOrder(order);
-    openWhatsAppToStore(buildWhatsAppMessage(order));
+    const fullName = $("#fullName").value.trim();
+    const email = $("#email").value.trim();
+    const phone = $("#phone").value.trim();
+    const note = $("#note").value.trim();
+    const qty = Math.max(1, parseInt(qtyInput.value,10)||1);
 
-    closeModal();
-    form.reset();
-    previewBox.style.display = "none";
-    previewBox.textContent = "";
+    if (!fullName || !email || !phone){
+      showToast("Fill Full name, Gmail, and Number.");
+      return;
+    }
+
+    const orderId = generateOrderId();
+    const msg = buildWhatsAppMessage({ orderId, product:p, qty, fullName, email, phone, note });
+
+    showToast("Opening WhatsApp… ✅");
+    openWhatsApp(msg);
   });
 }
 
-// =======================
 // Init
-// =======================
+initSlider();
 initHome();
 initProductPage();
