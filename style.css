@@ -11,6 +11,7 @@
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
@@ -19,6 +20,11 @@ body{
     radial-gradient(900px 520px at 10% 10%, rgba(47,107,255,.22), transparent 55%),
     radial-gradient(900px 520px at 90% 15%, rgba(72,213,255,.14), transparent 55%),
     var(--bg);
+  animation:bgFloat 14s ease-in-out infinite alternate;
+}
+@keyframes bgFloat{
+  from{filter:saturate(1) brightness(1)}
+  to{filter:saturate(1.1) brightness(1.05)}
 }
 
 .container{max-width:1100px;margin:0 auto;padding:18px}
@@ -32,16 +38,10 @@ body{
 }
 .topbar__row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand{margin:0;font-size:18px}
-.brand--link{
-  color:var(--text);text-decoration:none;
-  border:1px solid rgba(72,213,255,.18);
-  background:rgba(255,255,255,.04);
-  padding:8px 10px;border-radius:12px;
-  transition:.2s;
-}
-.brand--link:hover{transform:translateY(-2px);border-color:rgba(72,213,255,.35);}
 
-.nav{display:flex;gap:10px}
+/* Nav (مخبي كما بغيتي) */
+.nav{display:none !important;}
+
 .nav__link{
   color:var(--muted);text-decoration:none;
   border:1px solid rgba(72,213,255,.16);
@@ -49,8 +49,6 @@ body{
   padding:8px 10px;border-radius:12px;
   transition:.2s;
 }
-.nav__link:hover{transform:translateY(-2px);border-color:rgba(72,213,255,.32);}
-.nav__link.active{color:var(--text);border-color:rgba(72,213,255,.35)}
 
 .title-glow{margin:0 0 6px;text-shadow: 0 0 22px rgba(72,213,255,.22);}
 .section-head p{margin:0;color:var(--muted)}
@@ -58,7 +56,7 @@ body{
 /* ✅ Slider */
 .hero-slider{
   position:relative;
-  height:600px;
+  height:520px;
   border-radius:18px;
   overflow:hidden;
   border:1px solid rgba(72,213,255,.18);
@@ -105,6 +103,10 @@ body{
 .btn.primary{
   background:linear-gradient(90deg, rgba(47,107,255,.35), rgba(72,213,255,.25));
   border-color:rgba(72,213,255,.40);
+  box-shadow:0 0 0 rgba(72,213,255,0);
+}
+.btn.primary:hover{
+  box-shadow:0 0 22px rgba(72,213,255,.25);
 }
 
 .hero-btn{
@@ -129,19 +131,21 @@ body{
   cursor:pointer;
 }
 .hero-dot.active{background:rgba(72,213,255,.62);border-color:rgba(72,213,255,.62);}
+
 @media (max-width: 900px){ .hero-slider{height:420px;} }
 @media (max-width: 560px){ .hero-slider{height:340px;} .hero-content h3{font-size:20px;} }
 
-/* Products grid */
+/* ✅ Products grid: ديما 2 فالسطر حتى فالموبايل */
 .grid{
   display:grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap:14px;
   margin-top:12px;
 }
 @media (max-width: 900px){ .grid{grid-template-columns:repeat(2,1fr)} }
-@media (max-width: 560px){ .grid{grid-template-columns:1fr} }
+@media (max-width: 560px){ .grid{grid-template-columns:repeat(2,1fr); gap:10px;} }
 
+/* Card + Animation */
 .card{
   background:var(--card);
   border:1px solid rgba(72,213,255,.14);
@@ -149,13 +153,39 @@ body{
   overflow:hidden;
   box-shadow:var(--shadow);
   transition:.25s;
+  position:relative;
 }
-.card:hover{transform:translateY(-6px);border-color:rgba(72,213,255,.35)}
-.card__img{width:100%;aspect-ratio:1/1;object-fit:cover;border-bottom:1px solid rgba(72,213,255,.12)}
+.card::before{
+  content:"";
+  position:absolute; inset:-2px;
+  background:radial-gradient(600px 120px at 20% 0%, rgba(72,213,255,.22), transparent 55%);
+  opacity:0;
+  transition:.25s;
+  pointer-events:none;
+}
+.card:hover::before{opacity:1}
+
+.card:hover{transform:translateY(-7px);border-color:rgba(72,213,255,.45)}
+
+.card__img{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  border-bottom:1px solid rgba(72,213,255,.12);
+  transition:transform .6s ease;
+}
+.card:hover .card__img{transform:scale(1.07)}
+
 .card__body{padding:12px;display:flex;flex-direction:column;gap:10px}
 .card__row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.card__title{margin:0}
-.card__desc{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.card__title{margin:0;}
+.card__desc{
+  margin:0;
+  font-size:20px;
+  line-height:1.45;
+  font-style: bold;
+}
+
 .tag{
   font-size:12px;padding:4px 8px;border-radius:999px;
   border:1px solid rgba(72,213,255,.16);
@@ -209,6 +239,11 @@ body{
   color:var(--text);
   padding:10px 12px;border-radius:12px;
   outline:none;
+  transition:.2s;
+}
+.input:focus,.textarea:focus{
+  border-color:rgba(72,213,255,.45);
+  box-shadow:0 0 18px rgba(72,213,255,.18);
 }
 .textarea{min-height:92px;resize:vertical}
 
@@ -219,7 +254,9 @@ body{
   background:rgba(255,255,255,.03);
   color:var(--text);
   cursor:pointer;
+  transition:.2s;
 }
+.qty-btn:hover{transform:translateY(-2px);border-color:rgba(72,213,255,.35)}
 .qty-input{width:90px;text-align:center}
 
 /* Toast */
@@ -237,3 +274,22 @@ body{
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 .footer{border-top:1px solid rgba(72,213,255,.12);margin-top:18px;color:var(--muted)}
+
+/* ✅ Fix Back bar only in product page */
+.product-view .topbar{
+  background:transparent;
+  backdrop-filter:none;
+  border-bottom:none;
+}
+.product-view .topbar__row{justify-content:flex-start}
+.product-view .brand--link{
+  background:none;border:none;padding:0;border-radius:0;
+  color:var(--cyan);
+}
+.product-view .brand--link:hover{
+  transform:none;
+  text-decoration:underline;
+}
+
+
+

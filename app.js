@@ -6,25 +6,35 @@ const STORE_WHATSAPP = "212782901677";
 
 // Products (replace images with your 800x800)
 const products = [
-  { id:"netflix", name:"NETFLIX-Quantity not available", price:3.5, tag:"Acont",
-    desc:"Includes HD streaming, multiple profiles, watch on TV, laptop, phone, and tablet. Cancel anytime.",
-    details:"للطلب أملي الفورم بالمعطيات ديالك، و غادي يجيك مساج جاهز فواتساب باش تأكد الطلب ديالك. ما عليك غير تضغط على  فواتساب و غادي نتواصل معاك في أقرب وقت. شكرا لك!.",
-    img:"https://image2url.com/r2/default/images/1771338955670-2a9083bf-9459-42d6-953d-dc3026c84449.png"
+  { id:"netflix", name:"NETFLIX", price:3.5, tag:"Acont",
+    desc:"unavailable",
+    color:"#ff0000",    
+    details:"👈 في خانة ملحوظة : ضع رقم واتساب الخاص بك   ",
+    img:"https://image2url.com/r2/default/images/1771378091653-ef174194-8bb2-4bb9-bf9a-2f6b9ff07011.jpg"
   },
-    { id:"spotify", name:"SPOTIFY-Quantity not available", price:4, tag:"Acont",
-    desc:"Includes unlimited music streaming, millions of songs, create your own playlists, listen on phone, laptop, tablet, and TV. Cancel anytime.",
-    details:"للطلب أملي الفورم بالمعطيات ديالك، و غادي يجيك مساج جاهز فواتساب باش تأكد الطلب ديالك. ما عليك غير تضغط على  فواتساب و غادي نتواصل معاك في أقرب وقت. شكرا لك!.",
-    img:"https://image2url.com/r2/default/images/1771346850466-81d01413-aa23-4aa4-9506-37e770c077b1.png"
+  { id:"spotify", name:"SPOTIFY", price:4, tag:"Acont",
+    desc:"unavailable",
+    color:"#ff0000",
+    details:" 👈 في خانة ملحوظة : ضع رقم واتساب الخاص بك   ",
+    img:"https://image2url.com/r2/default/images/1771378213185-4a6e25db-4f1e-4a67-87d9-98aeda0ba526.png"
   },
-     { id:"instagram-followers", name:"FOLLOWERS-INSTAGRAM", price:2, tag:"1000 Followers",
-    desc:"Real Instagram followers, fast delivery, secure growth.",
-    details:"للطلب أملي الفورم بالمعطيات ديالك، و غادي يجيك مساج جاهز فواتساب باش تأكد الطلب ديالك. ما عليك غير تضغط على  فواتساب و غادي نتواصل معاك في أقرب وقت. شكرا لك!.",
-    img:"https://image2url.com/r2/default/images/1771347594897-ea1b0dac-c5ca-4f0a-b8b5-8491b068d33b.png"
+  { id:"instagram-followers", name:"FOLLOWERS-INSTAGRAM", price:2, tag:"1000 Followers",
+    desc:"Available",
+    color: "#00ff2f",
+    details:" 👈  في خانة الرابط : ضع رابط الصفحة/الحساب   ",
+    img:"https://image2url.com/r2/default/images/1771378343460-c59582e5-0277-4852-8d6f-51a176eb6fcc.jpg"
   },
-    { id:"facebook-followers", name:"FOLLOWERS-FACEBOOK", price:2, tag:"1000 Followers",
-    desc:"Real Facebook followers, fast delivery, secure growth.",
-    details:"للطلب أملي الفورم بالمعطيات ديالك، و غادي يجيك مساج جاهز فواتساب باش تأكد الطلب ديالك. ما عليك غير تضغط على  فواتساب و غادي نتواصل معاك في أقرب وقت. شكرا لك!.",
-    img:"https://image2url.com/r2/default/images/1771347594897-ea1b0dac-c5ca-4f0a-b8b5-8491b068d33b.png"
+  { id:"facebook-followers", name:"FOLLOWERS-FACEBOOK", price:1.5, tag:"1000 Followers",
+    desc:"Available",
+    color: "#00ff2f",
+    details:" 👈  في خانة الرابط : ضع رابط الصفحة/الحساب ",
+    img:"https://image2url.com/r2/default/images/1771380567868-859912da-83df-445c-b141-1469193059e9.png"
+  },
+    { id:"chatgbt", name:"CHATGBT 5PLUS", price:3.5, tag:"Acont",
+    desc:"Available",
+    color: "#00ff2f",
+    details:" 👈 في خانة ملحوظة : ضع الايميل الخاص بك   ",
+    img:"https://image2url.com/r2/default/images/1771378038777-9e78c201-5448-44f6-94df-c6b4c91c1ec2.jpg"
   },
 ];
 
@@ -37,7 +47,6 @@ const slidesData = [
     ctaHref: "#products",
     img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1600&q=80"
   },
-
 ];
 
 // Helpers
@@ -159,14 +168,14 @@ function initHome(){
   if (!gridEl) return;
 
   gridEl.innerHTML = products.map(p => `
-    <article class="card reveal">
+<article class="card reveal" style="border:2px solid ${p.color}">
       <img class="card__img" src="${p.img}" alt="${p.name}" />
       <div class="card__body">
         <div class="card__row">
           <h4 class="card__title">${p.name}</h4>
           <span class="tag">${p.tag}</span>
         </div>
-        <p class="card__desc">${p.desc}</p>
+        <p class="card__desc" style="color:${p.color}">${p.desc}</p>
         <div class="card__row">
           <div class="price">${money(p.price)}</div>
           <div class="card__actions">
@@ -287,3 +296,5 @@ function initProductPage(){
 initSlider();
 initHome();
 initProductPage();
+
+
