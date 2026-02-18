@@ -21,13 +21,13 @@ const products = [
   { id:"instagram-followers", name:"FOLLOWERS-INSTAGRAM", price:2, tag:"1000 Followers",
     desc:"Available",
     color: "#00ff2f",
-    details:" 👈  في خانة الرابط : ضع رابط الصفحة/الحساب   ",
+    details:" 👈  في خانة ملحوظة : ضع رابط الصفحة/الحساب   ",
     img:"https://image2url.com/r2/default/images/1771378343460-c59582e5-0277-4852-8d6f-51a176eb6fcc.jpg"
   },
   { id:"facebook-followers", name:"FOLLOWERS-FACEBOOK", price:1.5, tag:"1000 Followers",
     desc:"Available",
     color: "#00ff2f",
-    details:" 👈  في خانة الرابط : ضع رابط الصفحة/الحساب ",
+    details:" 👈  في خانة ملحوظة : ضع رابط الصفحة/الحساب ",
     img:"https://image2url.com/r2/default/images/1771380567868-859912da-83df-445c-b141-1469193059e9.png"
   },
     { id:"chatgbt", name:"CHATGBT 5PLUS", price:3.5, tag:"Acont",
